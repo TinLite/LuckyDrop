@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -20,21 +21,20 @@ public class Events implements Listener {
         Player player = event.getPlayer();
         Material block = event.getBlock().getType();
         if (!Storage.contains(block)) return;
-        if (Math.random() < (Storage.getPercentage(block) / 100))
-        {
-            event.getPlayer().getInventory().addItem(Storage.item);
-
-            if (Storage.config.getBoolean("Broadcast")) Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', Storage.config.getString("BroadcastMsg").replaceAll("%player%", event.getPlayer().getName()).replaceAll("%block%", block.name())));
-
+        if (Math.random() < (Storage.getPercentage(block) / 100)) {
+            ItemStack item = Storage.item.clone();
+            int random = ThreadLocalRandom.current().nextInt(9999);
+            item.getItemMeta().setDisplayName(ChatColor.translateAlternateColorCodes('&', Storage.config.getString("Head.Name").replaceAll("%id%", String.valueOf(random))));
+            event.getPlayer().getInventory().addItem();
+            if (Storage.config.getBoolean("Broadcast"))
+                Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', Storage.config.getString("BroadcastMsg").replaceAll("%player%", event.getPlayer().getName()).replaceAll("%block%", block.name())));
             if (Storage.config.getBoolean("PlayGlobalSound")) {
                 for (Player p : Bukkit.getOnlinePlayers())
                     if (!(player.getName().equals(p.getName())))
                         p.playSound(player.getLocation(), Sound.valueOf(Storage.config.getString("GlobalSound")), 1, 1);
             }
-
             if (Storage.config.getBoolean("PlaySingleSound"))
                 player.playSound(player.getLocation(), Sound.valueOf(Storage.config.getString("SingleSound")), 1, 1);
-
             if (Storage.config.getBoolean("Block." + block.name() + ".RemoveBaseItem")) {
                 event.getBlock().setType(Material.AIR);
                 event.setCancelled(true);
@@ -45,7 +45,8 @@ public class Events implements Listener {
     @EventHandler
     public void onClick(PlayerInteractEvent e) {
         if (e.getItem() == null) return;
-        if (e.getItem().isSimilar(Storage.item)) {
+        if (e.getItem().getItemMeta().getLore().equals(Storage.item.getItemMeta().getLore())
+                && e.getItem().getType().equals(Storage.item.getType())) {
             // Lấy danh sách những thứ cần Random
             Set<String> set = Storage.config.getConfigurationSection("Commands").getKeys(false);
             int index = ThreadLocalRandom.current().nextInt(set.size()); // Random thread, đề phòng nhiều người dùng 1 lúc
@@ -65,7 +66,12 @@ public class Events implements Listener {
             }
 
             // Gỡ 1 Item
-            e.getPlayer().getInventory().removeItem(Storage.item);
+            ItemStack hand = e.getPlayer().getInventory().getItemInHand();
+            if (hand.getAmount() == 1) e.getPlayer().getInventory().setItemInHand(new ItemStack(Material.AIR));
+            else {
+                hand.setAmount(hand.getAmount() - 1);
+                e.getPlayer().getInventory().setItemInHand(hand);
+            }
 
             // Kiểm tra xem cái list chó má kia có Empty ko
             if (!Storage.config.getStringList("Commands." + rnd + ".commands").isEmpty()) {
