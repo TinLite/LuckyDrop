@@ -16,6 +16,7 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new Events(), this);
         Storage.setup(this);
         Bukkit.getLogger().log(Level.INFO, ChatColor.GREEN + "LuckyDrop by TeamGamerVN. Coded by VinhGaming.");
+        Storage.createItemStack();
     }
 
     @Override

@@ -44,6 +44,7 @@ public class Storage {
     {
         plugin.reloadConfig();
         config = plugin.getConfig();
+        createItemStack();
     }
 
     public static ItemStack getCustomTextureHead(String value) {

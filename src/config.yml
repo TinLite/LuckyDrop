@@ -26,17 +26,17 @@ Head:
     - " "
     - "&7Cầm trên tay và chuột phải để sử dụng"
 
-Commands:
+Commands: # LƯU Ý: Ở PHẦN NÀY, PLACEHOLDER %block% KHÔNG HOẠT ĐỘNG
   THOR: # Tên. Đặt cái gì cũng được, này dễ đọc để config sau này thôi.
     message: "" # Thông báo cho người sử dụng. Để trống nếu không dùng.
     broadcast: "&6%player% mở Hộp bí ẩn và bị sét đánh. :(" # Thông báo toàn thế giới. Để trống nếu không dùng.
     sound: "" # Play âm thanh toàn thế giới. Để trống nếu không dùng.
-              # Vì trong game sét đánh có sẵn âm thanh rồi, còn lớn vloz nên khỏi dùng.
-    commands: # Lệnh. Không có /. Chạy dưới quyền console. Lệnh thực hiện tuần tự.
+    # Vì trong game sét đánh có sẵn âm thanh rồi, còn lớn vloz nên khỏi dùng.
+    commands: # Lệnh. Không có /. Chạy dưới quyền console. Lệnh thực hiện tuần tự. Không được bỏ trống.
       - "thor %player%"
   HEAL:
     message: "&6Bạn nhận thấy mình trên Fountain Valley, một quầng sáng màu hồng hiện ra. &c<3"
-             # Vì dùng lệnh /heal nên sẽ có dòng chữ mặc định "Bạn được hồi máu" trong game gửi đến người chơi
+    # Vì dùng lệnh /heal nên sẽ có dòng chữ mặc định "Bạn được hồi máu" trong game gửi đến người chơi
     broadcast: ""
     sound: "FIREWORK_LAUNCH"
     commands:

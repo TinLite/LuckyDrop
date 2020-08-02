@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -34,35 +33,63 @@ public class Events implements Listener {
             }
 
             if (Storage.config.getBoolean("PlaySingleSound"))
-                player.playSound(player.getLocation(), Sound.valueOf(Storage.config.getString("SingleSound")),1,1);
+                player.playSound(player.getLocation(), Sound.valueOf(Storage.config.getString("SingleSound")), 1, 1);
 
-            if (Storage.config.getBoolean("Block." + block.name() + ".RemoveBaseItem"))
-            {
+            if (Storage.config.getBoolean("Block." + block.name() + ".RemoveBaseItem")) {
                 event.getBlock().setType(Material.AIR);
                 event.setCancelled(true);
             }
         }
     }
 
-    public void onClick(PlayerInteractEvent e)
-    {
-        if (e.getItem().isSimilar(Storage.item))
-        {
+    @EventHandler
+    public void onClick(PlayerInteractEvent e) {
+        if (e.getItem().isSimilar(Storage.item)) {
+            // Lấy danh sách những thứ cần Random
             Set<String> set = Storage.config.getConfigurationSection("Commands").getKeys(false);
-            org.bukkit.configuration.file.FileConfiguration config = Storage.config;
-            int index = ThreadLocalRandom.current().nextInt(set.size());
+            int index = ThreadLocalRandom.current().nextInt(set.size()); // Random thread, đề phòng nhiều người dùng 1 lúc
             int i = 0;
-            String rnd;
-            for (String s : set)
-            {
-                if (index == i)
-                {
+            String rnd = null;
+            for (String s : set) {
+                if (index == i) {
                     rnd = s;
                     break;
                 }
                 i++;
             }
+            if (rnd == null) {
+                e.getPlayer().sendMessage(ChatColor.RED + "Có lỗi đã xảy ra. Hãy liên hệ Admin để báo lỗi này.");
+                e.getPlayer().sendMessage(ChatColor.RED + "Thông tin lỗi: PlayerInteract -> rnd -> Null.");
+                return;
+            }
+
+            // Gỡ 1 Item
             e.getPlayer().getInventory().removeItem(Storage.item);
+
+            // Kiểm tra xem cái list chó má kia có Empty ko
+            if (!Storage.config.getStringList("Commands." + rnd + ".commands").isEmpty()) {
+                // Thực hiện lệnh đã random
+                for (String s : Storage.config.getStringList("Commands." + rnd + ".commands"))
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.replaceAll("%player%", e.getPlayer().getName()));
+            }
+            // Tin nhắn người chơi sử dụng
+            if (!Storage.config.getString("Commands." + rnd + ".message").isEmpty())
+                e.getPlayer().sendMessage(
+                        ChatColor.translateAlternateColorCodes(
+                                '&',
+                                Storage.config.getString("Commands." + rnd + ".message")
+                                        .replaceAll("%player%", e.getPlayer().getName())));
+            // Broadcast toàn thế giới
+            if (!Storage.config.getString("Commands." + rnd + ".broadcast").isEmpty())
+                Bukkit.broadcastMessage(
+                        ChatColor.translateAlternateColorCodes(
+                                '&',
+                                Storage.config.getString("Commands." + rnd + ".broadcast")
+                                        .replaceAll("%player%", e.getPlayer().getName())));
+            // Play sound.
+            if (!Storage.config.getString("Commands." + rnd + ".sound").isEmpty())
+                for (Player p : Bukkit.getOnlinePlayers())
+                    p.playSound(p.getLocation(), Sound.valueOf(Storage.config.getString("Commands." + rnd + ".sound")), 1, 1);
             e.setCancelled(true);
         }
     }

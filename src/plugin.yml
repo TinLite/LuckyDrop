@@ -3,13 +3,15 @@ name: LuckyDrop
 version: 1.0.0
 authors: [TeamGamerVN, VinhGaming]
 commands:
-  customdrop:
+  luckydrop:
     description: Main command
-    aliases: cd
+    aliases: ld
 
 permissions:
   ld.*:
     default: op
     description: Nothing
     children:
+      ld.admin: true
+      cd.*: true
       cd.admin: true

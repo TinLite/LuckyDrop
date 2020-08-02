@@ -19,33 +19,26 @@ public class Commands {
         return true;
     }
 
-    public boolean reloadConfig(CommandSender sender)
-    {
+    public boolean reloadConfig(CommandSender sender) {
         Storage.reloadConfig();
-        sender.sendMessage(ChatColor.GREEN + "Config Reloaded.");
+        sender.sendMessage(ChatColor.GREEN + "Config Reloaded. Lệnh này có thể thực hiện không đúng.");
         return true;
     }
 
-    public boolean givebox(CommandSender sender, String[] args)
-    {
-        if (args.length == 1)
-        {
+    public boolean givebox(CommandSender sender, String[] args) {
+        if (args.length == 1) {
             return sendHelp(sender);
         }
         Player player = null;
-        if (args.length == 2);
-        {
-            for (Player p : Bukkit.getOnlinePlayers())
-            {
-                if (p.getName().equals(args[1]))
-                {
+        if (args.length == 2) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if (p.getName().equals(args[1])) {
                     player = p;
                     break;
                 }
             }
         }
-        if (player == null)
-        {
+        if (player == null) {
             sender.sendMessage(ChatColor.RED + "Người chơi không Online.");
             return true;
         }
