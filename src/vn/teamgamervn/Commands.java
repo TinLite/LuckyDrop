@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class Commands {
     public boolean sendHelp(CommandSender sender)
@@ -29,15 +30,27 @@ public class Commands {
         if (args.length == 1) {
             return sendHelp(sender);
         }
+        ItemStack stack = Storage.item.clone();
         Player player = null;
-        if (args.length == 2) {
+        if (args.length >= 2) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if (p.getName().equals(args[1])) {
+                if (p.getName().equalsIgnoreCase(args[1])) {
                     player = p;
                     break;
                 }
             }
         }
+        if (player == null) {
+            sender.sendMessage(ChatColor.RED + "Người chơi không Online.");
+        }
+        if (args.length >= 3)
+            try {
+                int a = Integer.parseInt(args[2]);
+                stack.setAmount(a);
+            } catch (NumberFormatException e) {
+                sender.sendMessage(ChatColor.RED + "Tham số [số lượng] bạn đã truyền vào không phải là số.");
+                return true;
+            }
         if (player == null) {
             sender.sendMessage(ChatColor.RED + "Người chơi không Online.");
             return true;

@@ -44,6 +44,7 @@ public class Events implements Listener {
 
     @EventHandler
     public void onClick(PlayerInteractEvent e) {
+        if (e.getItem() == null) return;
         if (e.getItem().isSimilar(Storage.item)) {
             // Lấy danh sách những thứ cần Random
             Set<String> set = Storage.config.getConfigurationSection("Commands").getKeys(false);
