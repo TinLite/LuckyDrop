@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -24,8 +25,10 @@ public class Events implements Listener {
         if (Math.random() < (Storage.getPercentage(block) / 100)) {
             ItemStack item = Storage.item.clone();
             int random = ThreadLocalRandom.current().nextInt(9999);
-            item.getItemMeta().setDisplayName(ChatColor.translateAlternateColorCodes('&', Storage.config.getString("Head.Name").replaceAll("%id%", String.valueOf(random))));
-            event.getPlayer().getInventory().addItem();
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', Storage.config.getString("Head.Name").replaceAll("%id%", String.valueOf(random))));
+            item.setItemMeta(meta);
+            event.getPlayer().getInventory().addItem(item);
             if (Storage.config.getBoolean("Broadcast"))
                 Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', Storage.config.getString("BroadcastMsg").replaceAll("%player%", event.getPlayer().getName()).replaceAll("%block%", block.name())));
             if (Storage.config.getBoolean("PlayGlobalSound")) {
@@ -45,8 +48,8 @@ public class Events implements Listener {
     @EventHandler
     public void onClick(PlayerInteractEvent e) {
         if (e.getItem() == null) return;
-        if (e.getItem().getItemMeta().getLore().equals(Storage.item.getItemMeta().getLore())
-                && e.getItem().getType().equals(Storage.item.getType())) {
+        if (e.getItem().getType() != Material.SKULL_ITEM) return;
+        if (e.getItem().getItemMeta().getLore().equals(Storage.ilore)) {
             // Lấy danh sách những thứ cần Random
             Set<String> set = Storage.config.getConfigurationSection("Commands").getKeys(false);
             int index = ThreadLocalRandom.current().nextInt(set.size()); // Random thread, đề phòng nhiều người dùng 1 lúc

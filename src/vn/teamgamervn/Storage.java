@@ -18,6 +18,7 @@ public class Storage {
     static Plugin plugin;
     static FileConfiguration config;
     static ItemStack item;
+    static List<String> ilore;
 
     public static void createItemStack()
     {
@@ -66,6 +67,7 @@ public class Storage {
         List<String> newlore = new ArrayList<String>();
         for (String s : lore)
             newlore.add(ChatColor.translateAlternateColorCodes('&', s));
+        ilore = newlore;
         meta.setLore(newlore);
         head.setItemMeta(meta);
         return head;

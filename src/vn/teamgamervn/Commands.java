@@ -5,6 +5,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Commands {
     public boolean sendHelp(CommandSender sender)
@@ -55,7 +58,12 @@ public class Commands {
             sender.sendMessage(ChatColor.RED + "Người chơi không Online.");
             return true;
         }
-        player.getInventory().addItem(Storage.item);
+        ItemStack item = Storage.item.clone();
+        int random = ThreadLocalRandom.current().nextInt(9999);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', Storage.config.getString("Head.Name").replaceAll("%id%", String.valueOf(random))));
+        item.setItemMeta(meta);
+        ((Player) sender).getInventory().addItem(item);
         return true;
     }
 }
