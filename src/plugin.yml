@@ -1,0 +1,15 @@
+main: vn.teamgamervn.Main
+name: LuckyDrop
+version: 1.0.0
+authors: [TeamGamerVN, VinhGaming]
+commands:
+  customdrop:
+    description: Main command
+    aliases: cd
+
+permissions:
+  ld.*:
+    default: op
+    description: Nothing
+    children:
+      cd.admin: true

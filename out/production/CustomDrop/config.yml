@@ -1,0 +1,26 @@
+# CustomDrop by TeamGamerVN
+
+# Placeholders:
+# - %player% Tên người chơi
+# - %block% Tên block
+
+# Có Broadcast tin nhắn nếu người chơi đào được block hay không?
+Broadcast: true
+BroadcastMsg: "&eNgười chơi %player% vừa đào được %block% may mắn và nhận được Item thưởng"
+
+# Play âm thanh toàn thế giới hay không?
+# Danh sách âm thanh: https://helpch.at/docs/1.8/org/bukkit/Sound.html
+PlayGlobalSound: true
+GlobalSound: CLICK
+
+# Play âm thanh cho người đào được block?
+PlaySingleSound: true
+SingleSound: FIREWORK_LAUNCH
+
+Block:
+  STONE: # Item sẽ rơi
+    Chance: 5 #Tỉ lệ
+    PickRandomOrExcuteAll: true # Pick random hay là chạy hết tất cả câu lệnh
+    RemoveBaseItem: true # Loại bỏ Item từ block gốc hay không, ví dụ ở đây là có chặn drop Stone hay không
+    Commands: # Command để chạy, chạy dưới quyền console, không có /
+      - "give %player% Golden_Apple 1"
