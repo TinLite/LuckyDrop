@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,7 +63,7 @@ public class Storage {
         }
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',config.getString("Head.Name")));
         List<String> lore = config.getStringList("Head.Lore");
-        List<String> newlore = null;
+        List<String> newlore = new ArrayList<String>();
         for (String s : lore)
             newlore.add(ChatColor.translateAlternateColorCodes('&', s));
         meta.setLore(newlore);
