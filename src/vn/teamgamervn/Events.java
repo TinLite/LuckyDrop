@@ -52,7 +52,7 @@ public class Events implements Listener {
         if (e.getItem().getItemMeta().getLore().equals(Storage.ilore)) {
             // Lấy danh sách những thứ cần Random
             Set<String> set = Storage.config.getConfigurationSection("Commands").getKeys(false);
-            int index = ThreadLocalRandom.current().nextInt(set.size()); // Random thread, đề phòng nhiều người dùng 1 lúc
+            int index = ThreadLocalRandom.current().nextInt(set.size() - 1); // Random thread, đề phòng nhiều người dùng 1 lúc
             int i = 0;
             String rnd = null;
             for (String s : set) {
