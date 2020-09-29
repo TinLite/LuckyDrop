@@ -54,7 +54,7 @@ public class Storage {
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         GameProfile profile = new GameProfile(UUID.randomUUID(), "");
         profile.getProperties().put("textures", new Property("textures", value));
-        Field profileField = null;
+        Field profileField;
         try {
             profileField = meta.getClass().getDeclaredField("profile");
             profileField.setAccessible(true);
@@ -64,7 +64,7 @@ public class Storage {
         }
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',config.getString("Head.Name")));
         List<String> lore = config.getStringList("Head.Lore");
-        List<String> newlore = new ArrayList<String>();
+        List<String> newlore = new ArrayList<>();
         for (String s : lore)
             newlore.add(ChatColor.translateAlternateColorCodes('&', s));
         ilore = newlore;
